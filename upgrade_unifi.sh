@@ -22,6 +22,8 @@
 # of the additional variables below (defaults should work fine), then run
 # the script!
 
+# CONFIGURATION OPTIONS
+
 # UniFi Controller version to install
 unifi_version=5.0.7
 
@@ -34,7 +36,7 @@ unifi_archive_filename=UniFi.unix.zip
 unifi_archive_location=https://www.ubnt.com/downloads/unifi/
 temp_dir=/tmp
 
-# SHOULDN'T HAVE TO MODIFY PAST THIS POINT
+#### SHOULDN'T HAVE TO MODIFY PAST THIS POINT ####
 
 # Create progress dots function
 function show_dots() {
