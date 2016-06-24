@@ -3,16 +3,17 @@
 # upgrade_unifi.sh
 # Easy UniFi Controller Upgrade Script for Unix/Linux Systems
 # by Steve Jenkins (stevejenkins.com)
-# Last Updated June 23, 2016
+# Last Updated June 24, 2016
 
 # REQUIREMENTS
 # 1) Assumes you already have any version of UniFi Controller installed 
-# and running on your system
-# 2) Requires a service start/stop script to properly shut down and 
-# restart the UniFi controller before and after upgrade. I've written
-# compatible startup scrips for SysV and systemd systems at 
-# http://wp.me/p1iGgP-2wl
-# 3) Requires wget command to fetch the software from UBNT's download site 
+#    and running on your system.
+# 2) Assumes a user named "ubnt" owns the /opt/UniFi directory.
+# 3) Requires a service start/stop script to properly shut down and 
+#    restart the UniFi controller before and after upgrade. I've written
+#    compatible startup scrips for SysV and systemd systems at 
+#    http://wp.me/p1iGgP-2wl
+# 4) Requires wget command to fetch the software from UBNT's download site.
 
 # USAGE
 # Modify the "unifi_version" variable below using the version number you
@@ -25,6 +26,7 @@
 unifi_version=5.0.7
 
 # Additional variables (defaults should work fine on most systems)
+unifi_user=ubnt
 unifi_parent_dir=/opt
 unifi_dir=/opt/UniFi
 unifi_backup_dir=/opt/UniFi_bak
@@ -83,6 +85,9 @@ show_dots $!
 printf "\nExtracting UniFi Controller backup data to new directory..."
 tar zxf $temp_dir/unifi_data_bak.tar.gz -C $unifi_dir &
 show_dots $!
+
+# Enforce proper ownership of UniFi directory
+chown -R $unifi_user:$unifi_user $unifi_dir
 
 # Restart the local UniFi Controller service
 printf "\n"
