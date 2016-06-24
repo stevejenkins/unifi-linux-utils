@@ -28,7 +28,7 @@
 unifi_version=5.0.7
 
 # Additional variables (defaults should work fine on most systems)
-unifi_user=ubnt
+unifi_owner=ubnt
 unifi_parent_dir=/opt
 unifi_dir=/opt/UniFi
 unifi_backup_dir=/opt/UniFi_bak
@@ -89,7 +89,7 @@ tar zxf $temp_dir/unifi_data_bak.tar.gz -C $unifi_dir &
 show_dots $!
 
 # Enforce proper ownership of UniFi directory
-chown -R $unifi_user:$unifi_user $unifi_dir
+chown -R $unifi_owner:$unifi_owner $unifi_dir
 
 # Restart the local UniFi Controller service
 printf "\n"
