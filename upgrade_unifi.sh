@@ -18,8 +18,9 @@
 
 # USAGE
 # Modify the "UNIFI_DOWNLOAD_URL" variable below using the full URL of
-# the file on UBNT's download site. Optionally modify any of the additional
-# variables below (defaults should work fine), then run the script!
+# the UniFi Controller zip file on UBNT's download site. Optionally modify
+# any of the additional variables below (defaults should work fine),
+# then run the script!
 
 # CONFIGURATION OPTIONS
 UNIFI_DOWNLOAD_URL=http://dl.ubnt.com/unifi/5.0.7/UniFi.unix.zip
