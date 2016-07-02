@@ -3,7 +3,8 @@
 # upgrade_unifi.sh
 # Easy UniFi Controller Upgrade Script for Unix/Linux Systems
 # by Steve Jenkins (stevejenkins.com)
-# Last Updated June 24, 2016
+# Version 2.0
+# Last Updated July 2, 2016
 
 # REQUIREMENTS
 # 1) Assumes you already have any version of UniFi Controller installed 
@@ -16,30 +17,23 @@
 # 4) Requires wget command to fetch the software from UBNT's download site.
 
 # USAGE
-# Modify the "unifi_version" variable below using the version number you
-# wish to install (e.g. "5.0.7"). For Beta versions, use the full download 
-# directory in the UBNT download link (e.g. "5.0.8-ac599f45"). Modify any 
-# of the additional variables below (defaults should work fine), then run
-# the script!
+# Modify the "UNIFI_DOWNLOAD_URL" variable below using the full URL of
+# the file on UBNT's download site. Optionally modify any of the additional
+# variables below (defaults should work fine), then run the script!
 
 # CONFIGURATION OPTIONS
-
-# UniFi Controller version to install
-unifi_version=5.0.7
-
-# Additional variables (defaults should work fine on most systems)
-unifi_owner=ubnt
-unifi_parent_dir=/opt
-unifi_dir=/opt/UniFi
-unifi_backup_dir=/opt/UniFi_bak
-unifi_archive_filename=UniFi.unix.zip
-unifi_archive_location=https://www.ubnt.com/downloads/unifi/
-temp_dir=/tmp
+UNIFI_DOWNLOAD_URL=http://dl.ubnt.com/unifi/5.0.7/UniFi.unix.zip
+UNIFI_ARCHIVE_FILENAME=UniFi.unix.zip
+UNIFI_OWNER=ubnt
+UNIFI_PARENT_DIR=/opt
+UNIFI_DIR=/opt/UniFi
+UNIFI_BACKUP_DIR=/opt/UniFi_bak
+TEMP_DIR=/tmp
 
 #### SHOULDN'T HAVE TO MODIFY PAST THIS POINT ####
 
 # Create progress dots function
-function show_dots() {
+show_dots() {
 	while ps $1 >/dev/null ; do
 	printf "."
 	sleep 1
@@ -48,54 +42,68 @@ function show_dots() {
 }
 
 # Let's DO this!
-printf "Upgrading to UniFi Controller v$unifi_version...\n"
-
-# Stop the local UniFi Controller service
-printf "\n"
-service UniFi stop
+printf "Upgrading UniFi Controller...\n"
 
 # Retrieve the updated zip archive from UBNT (overwriting any previous version)
-printf "\nDownloading $unifi_archive_filename from UBNT..."
-cd $temp_dir
-wget -qq $unifi_archive_location/$unifi_version/$unifi_archive_filename -O $unifi_archive_filename &
+printf "\nDownloading %s from UBNT..." "$UNIFI_DOWNLOAD_URL"
+cd $TEMP_DIR || exit
+wget -qq $UNIFI_DOWNLOAD_URL -O $UNIFI_ARCHIVE_FILENAME &
 show_dots $!
 
-# Remove previous backup directory (if it exists)
-if [ -d "$unifi_backup_dir" ]; then
-	printf "\nRemoving previous backup directory...\n"
-	rm -rf $unifi_backup_dir
+# Check to make sure we have a downloaded file to work with
+
+if [ -f "$UNIFI_ARCHIVE_FILENAME" ]; then
+
+	# Archive file exists, extract and install it
+
+	# Stop the local UniFi Controller service
+	printf "\n"
+	service UniFi stop
+	
+	# Remove previous backup directory (if it exists)
+	if [ -d "$UNIFI_BACKUP_DIR" ]; then
+		printf "\nRemoving previous backup directory...\n"
+		rm -rf $UNIFI_BACKUP_DIR
+	fi
+	
+	# Move existing UniFi directory to backup location
+	printf "\nMoving existing UniFi Controller directory to backup location...\n"
+	mv $UNIFI_DIR $UNIFI_BACKUP_DIR
+	
+	# Extract new version
+	printf "\nExtracting downloaded software..."
+	unzip -qq $TEMP_DIR/$UNIFI_ARCHIVE_FILENAME -d $UNIFI_PARENT_DIR &
+	show_dots $!
+	
+	# Jump into the backup directory
+	cd $UNIFI_BACKUP_DIR || exit
+	
+	# Create an archive of the existing data directory
+	printf "\nBacking up existing UniFi Controller data..."
+	tar zcf $TEMP_DIR/unifi_data_bak.tar.gz data/ &
+	show_dots $!
+	
+	# Extract the data into the new directory
+	printf "\nExtracting UniFi Controller backup data to new directory..."
+	tar zxf $TEMP_DIR/unifi_data_bak.tar.gz -C $UNIFI_DIR &
+	show_dots $!
+	
+	# Enforce proper ownership of UniFi directory
+	chown -R $UNIFI_OWNER:$UNIFI_OWNER $UNIFI_DIR
+	
+	# Restart the local UniFi Controller service
+	printf "\n"
+	service UniFi start
+	
+	# All done!
+	printf "\nUpgrade of UniFi Controller complete!\n"
+
+	exit 0
+
+else
+
+	# Archive file doesn't exist, warn and exit
+	printf "\nUniFi Controller software not found! Please check download link.\n"
+
+	exit 1
 fi
-
-# Move existing UniFi directory to backup location
-printf "\nMoving existing UniFi Controller directory to backup location...\n"
-mv $unifi_dir $unifi_backup_dir
-
-# Extract new version
-printf "\nExtracting downloaded software..."
-unzip -qq $temp_dir/$unifi_archive_filename -d $unifi_parent_dir &
-show_dots $!
-
-# Jump into the backup directory
-cd $unifi_backup_dir
-
-# Create an archive of the existing data directory
-printf "\nBacking up existing UniFi Controller data..."
-tar zcf $temp_dir/unifi_data_bak.tar.gz data/ &
-show_dots $!
-
-# Extract the data into the new directory
-printf "\nExtracting UniFi Controller backup data to new directory..."
-tar zxf $temp_dir/unifi_data_bak.tar.gz -C $unifi_dir &
-show_dots $!
-
-# Enforce proper ownership of UniFi directory
-chown -R $unifi_owner:$unifi_owner $unifi_dir
-
-# Restart the local UniFi Controller service
-printf "\n"
-service UniFi start
-
-# All done!
-printf "\nUpgrade to UniFi Controller v$unifi_version complete!\n"
-
-exit
