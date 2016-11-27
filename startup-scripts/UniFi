@@ -1,0 +1,74 @@
+#!/bin/bash
+#
+# UniFi         Start and stop the UBNT UniFi Controller
+# chkconfig:    2345 95 20
+# description:  UniFi Controller
+# pidfile: /var/run/UniFi.pid
+
+# Script by Steve Jenkins (SteveJenkins.com)
+# Last Updated June 15, 2016
+
+. /etc/rc.d/init.d/functions
+
+SERVICE_NAME="UniFi Controller"
+PATH_TO_JAVA=/usr/bin/java
+PATH_TO_JAR=/opt/UniFi/lib/ace.jar
+MEM_LIMIT=1024M
+PID_FILE=/var/run/UniFi.pid
+
+start() {
+  if [ ! -f $PID_FILE ]; then
+    echo -n "Starting $SERVICE_NAME: "
+    $PATH_TO_JAVA -Xmx$MEM_LIMIT -jar $PATH_TO_JAR start &> /dev/null &
+    echo $! > $PID_FILE
+    echo_success
+    echo
+  else
+    echo -n "$SERVICE_NAME is already running"
+    echo_failure
+    echo
+  fi
+}
+
+stop() {
+  if [ -f $PID_FILE ]; then
+    PID=$(cat $PID_FILE);
+    echo -n "Stopping $SERVICE_NAME: "
+    $PATH_TO_JAVA -jar $PATH_TO_JAR stop &> /dev/null &
+    rm $PID_FILE
+    echo_success
+    echo
+  else
+    echo -n "$SERVICE_NAME is not running"
+    echo_failure
+    echo
+  fi
+}
+
+case $1 in
+  start)
+    start
+  ;;
+  stop)
+    stop
+  ;;
+  restart)
+    stop
+    start
+  ;;
+  status)
+    if [ -f $PID_FILE ]; then
+      PID=$(cat $PID_FILE);
+      echo "$SERVICE_NAME running as process $PID"
+    else
+      echo "$SERVICE_NAME is not running"
+    fi
+  ;;
+*)
+
+echo "usage: service UniFi {start|stop|restart|status}"
+exit 1
+;;
+
+esac
+exit 0
