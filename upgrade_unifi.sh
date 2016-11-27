@@ -4,7 +4,7 @@
 # Easy UniFi Controller Upgrade Script for Unix/Linux Systems
 # by Steve Jenkins (stevejenkins.com)
 # Version 2.0
-# Last Updated July 2, 2016
+# Last Updated Nov 26, 2016
 
 # REQUIREMENTS
 # 1) Assumes you already have any version of UniFi Controller installed 
@@ -26,6 +26,7 @@
 UNIFI_DOWNLOAD_URL=http://dl.ubnt.com/unifi/5.0.7/UniFi.unix.zip
 UNIFI_ARCHIVE_FILENAME=UniFi.unix.zip
 UNIFI_OWNER=ubnt
+UNIFI_SERVICE=UniFi
 UNIFI_PARENT_DIR=/opt
 UNIFI_DIR=/opt/UniFi
 UNIFI_BACKUP_DIR=/opt/UniFi_bak
@@ -59,7 +60,7 @@ if [ -f "$UNIFI_ARCHIVE_FILENAME" ]; then
 
 	# Stop the local UniFi Controller service
 	printf "\n"
-	service UniFi stop
+	service $UNIFI_SERVICE stop
 	
 	# Remove previous backup directory (if it exists)
 	if [ -d "$UNIFI_BACKUP_DIR" ]; then
@@ -94,7 +95,7 @@ if [ -f "$UNIFI_ARCHIVE_FILENAME" ]; then
 	
 	# Restart the local UniFi Controller service
 	printf "\n"
-	service UniFi start
+	service $UNIFI_SERVICE start
 	
 	# All done!
 	printf "\nUpgrade of UniFi Controller complete!\n"
