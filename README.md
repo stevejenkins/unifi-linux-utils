@@ -7,5 +7,8 @@ Imports SSL certificates (including Let's Encrypt) for the UBNT UniFi Controller
 ## upgrade_unifi_controller.sh
 Automates upgrade of UBNT UniFi Controller software on Linux / Unix Systems
 
-##UniFi.service
+##/startup-scripts/UniFi.service
 UBNT UniFi controller service file for systemd Linux / Unix systems
+
+##/startup-scripts/UniFi
+UBNT UniFi controller service file for SysV Linux / Unix systems
