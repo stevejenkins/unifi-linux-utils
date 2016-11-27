@@ -3,7 +3,7 @@
 # upgrade_unifi.sh
 # Easy UniFi Controller Upgrade Script for Unix/Linux Systems
 # by Steve Jenkins (stevejenkins.com)
-# Version 2.0
+# Version 2.1
 # Last Updated Nov 26, 2016
 
 # REQUIREMENTS
