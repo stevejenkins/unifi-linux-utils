@@ -1,5 +1,5 @@
 # unifi-linux-utils
-A collection of helpful Linux / Unix scripts and utilities for admins of UBNT UniFi products
+A collection of helpful Linux / Unix scripts and utilities for admins of Ubiquiti (UBNT) UniFi products
 
 ## uap-reboot.sh
 Remotely reboots a Ubiquiti (UBNT) UniFi access point
