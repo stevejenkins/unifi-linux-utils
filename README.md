@@ -11,8 +11,11 @@ Imports SSL certificates (including Let's Encrypt) for the Ubiquiti (UBNT) UniFi
 Automates upgrade of Ubiquiti (UBNT) UniFi Controller software on Linux / Unix Systems
 
 ## UniFi Controller Startup Scripts
-###/startup-scripts/UniFi.service
+### /startup-scripts/UniFi.service
 Ubiquiti (UBNT) UniFi controller service file for systemd Linux / Unix systems
 
-###/startup-scripts/UniFi
+### /startup-scripts/UniFi
 Ubiquiti (UBNT) UniFi controller service file for SysV Linux / Unix systems
+
+### docker
+The `docker` directory contains docker related stuff, f.e. a systemd file which can be used to run a unifi controller in a container.
