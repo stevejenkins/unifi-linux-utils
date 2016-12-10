@@ -12,10 +12,10 @@ Automates upgrade of Ubiquiti (UBNT) UniFi Controller software on Linux / Unix S
 
 ## UniFi Controller Startup Scripts
 ### /startup-scripts/UniFi.service
-Ubiquiti (UBNT) UniFi controller service file for systemd Linux / Unix systems
+A systemd service file which can be used to run a Ubiquiti (UBNT) UniFi controller Ubiquiti on Linux systems
 
 ### /startup-scripts/UniFi
-Ubiquiti (UBNT) UniFi controller service file for SysV Linux / Unix systems
+A SysV service file which can be used to run a Ubiquiti (UBNT) UniFi controller Ubiquiti on Linux systems
 
-### docker
-The `docker` directory contains docker related stuff, f.e. a systemd file which can be used to run a unifi controller in a container.
+### /startup-scripts/docker-unifi.service
+A systemd service file which can be used to run a Ubiquiti (UBNT) UniFi controller in a Docker container on Linux systems
