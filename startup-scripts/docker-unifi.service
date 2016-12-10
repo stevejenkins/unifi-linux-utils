@@ -1,3 +1,15 @@
+# UniFi Controller systemd Docker Service File
+# by Rogier Lommers
+# Last updated December 10, 2016
+
+# Instructions:
+# 1. Install Docker, Java, MongoDB, and UniFi Controller
+#    (see https://hub.docker.com/r/goofball222/unifi/ for
+#    Docker-specific info)
+# 2. Save this file as /etc/systemd/system/docker-unifi.service
+# 3. Create 'ubnt' user on your system
+# 4. Run 'systemctl enable docker-unifi.service'
+
 [Unit]
 Description=Daemon for Unifi
 After=docker.service
