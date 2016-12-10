@@ -18,8 +18,11 @@ A systemd service file which can be used to run a Ubiquiti (UBNT) UniFi controll
 A SysV service file which can be used to run a Ubiquiti (UBNT) UniFi controller Ubiquiti on Linux systems.
 
 ### /startup-scripts/docker-unifi.service
-A systemd service file which can be used to run a Ubiquiti (UBNT) UniFi controller in a Docker container on Linux systems (contributed by @rogierlommers). See https://hub.docker.com/r/goofball222/unifi/ for additional UniFi Dockerfile info.
+A systemd service file which can be used to run a Ubiquiti (UBNT) UniFi controller in a Docker container on Linux systems (contributed by @rogierlommers). See https://github.com/goofball222/unifi for UniFi + Docker info.
 
-#Other UniFi Linux Projects I Like
+#Other UniFi-related Linux Projects I Like
 ###UniFi-API - https://github.com/calmh/unifi-api###
 An API for communicating with Linux-based UniFi controllers, with a few helpful utilities that rely on the API.
+
+###UniFi Docker - https://github.com/goofball222/unifi###
+A Docker container built for Ubiquiti (UBNT) UniFi controllers.
