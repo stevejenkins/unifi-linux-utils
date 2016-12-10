@@ -1,0 +1,18 @@
+[Unit]
+Description=Daemon for Unifi
+After=docker.service
+Wants=
+Requires=docker.service
+
+[Service]
+Restart=on-failure
+StartLimitInterval=20
+StartLimitBurst=5
+TimeoutStartSec=0
+Environment="HOME=/root"
+
+ExecStart=/usr/bin/docker run --name unifi-controller --net host -v /srv/services/unify:/usr/lib/unifi/data -v /srv/services/unify:/usr/lib/unifi/logs -v /srv/services/unify:/var/log/supervisor goofball222/unifi
+ExecStop=-/usr/bin/docker stop unifi
+
+[Install]
+WantedBy=multi-user.target
