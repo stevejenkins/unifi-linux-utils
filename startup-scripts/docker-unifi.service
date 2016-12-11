@@ -2,29 +2,18 @@
 # by Rogier Lommers
 # Last updated December 10, 2016
 
-# Instructions:
-# 1. Install Docker, Java, MongoDB, and UniFi Controller
-#    (see https://hub.docker.com/r/goofball222/unifi/ for
-#    Docker-specific info)
-# 2. Save this file as /etc/systemd/system/docker-unifi.service
-# 3. Create 'ubnt' user on your system
-# 4. Run 'systemctl enable docker-unifi.service'
+# This service file assumes a Docker container is available. If not, create one with:
+# docker run --name unifi-controller --net host -v /srv/services/unify:/usr/lib/unifi/data -v /srv/services/unify:/usr/lib/unifi/logs -v /srv/services/unify:/var/log/supervisor goofball222/unifi
 
 [Unit]
-Description=Daemon for Unifi
-After=docker.service
-Wants=
+Description=Unifi controller
 Requires=docker.service
+After=docker.service
 
 [Service]
-Restart=on-failure
-StartLimitInterval=20
-StartLimitBurst=5
-TimeoutStartSec=0
-Environment="HOME=/root"
-
-ExecStart=/usr/bin/docker run --name unifi-controller --net host -v /srv/services/unify:/usr/lib/unifi/data -v /srv/services/unify:/usr/lib/unifi/logs -v /srv/services/unify:/var/log/supervisor goofball222/unifi
-ExecStop=-/usr/bin/docker stop unifi
+Restart=always
+ExecStart=/usr/bin/docker start -a unifi-controller
+ExecStop=/usr/bin/docker stop -t 3 unifi-controller
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
