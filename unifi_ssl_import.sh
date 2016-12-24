@@ -3,14 +3,14 @@
 # unifi_ssl_import.sh
 # UniFi Controller SSL Certificate Import Script for Unix/Linux Systems
 # by Steve Jenkins <http://www.stevejenkins.com/>
-# From https://github.com/stevejenkins/ubnt-linux-utils/
+# Part of https://github.com/stevejenkins/ubnt-linux-utils/
 # Incorporates ideas from https://source.sosdg.org/brielle/lets-encrypt-scripts
-# Version 2.3
-# Last Updated November 27, 2016
+# Version 2.4
+# Last Updated Dec 24, 2016
 
 # REQUIREMENTS
 # 1) Assumes you have a UniFi Controller installed and running on your system.
-# 2) Assumes you have a valid private key, signed certificate, and certificate
+# 2) Assumes you already have a valid private key, signed certificate, and certificate
 #    authority chain file. See http://wp.me/p1iGgP-2wU for detailed instructions
 #    on how to generate these files and use them with this script.
 
@@ -22,11 +22,15 @@
 
 # CONFIGURATION OPTIONS
 UNIFI_HOSTNAME=hostname.example.com
+# Uncomment following two lines for Fedora/RedHat/CentOS
 UNIFI_DIR=/opt/UniFi
-#UNIFI_DIR=/usr/lib/unifi
 UNIFI_SERVICE=UniFi
+# Uncomment following two lines for Debian/Ubuntu
+#UNIFI_DIR=/var/lib/unifi
+#UNIFI_SERVICE=unifi
 
 # FOR LET'S ENCRYPT SSL CERTIFICATES ONLY
+# Generate your Let's Encrtypt key & cert with certbot before running this script
 LE_MODE=no
 LE_LIVE_DIR=/etc/letsencrypt/live
 
