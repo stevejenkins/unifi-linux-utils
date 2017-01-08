@@ -5,8 +5,8 @@
 # by Steve Jenkins <http://www.stevejenkins.com/>
 # Part of https://github.com/stevejenkins/ubnt-linux-utils/
 # Incorporates ideas from https://source.sosdg.org/brielle/lets-encrypt-scripts
-# Version 2.4
-# Last Updated Dec 24, 2016
+# Version 2.5
+# Last Updated Jan 7, 2017
 
 # REQUIREMENTS
 # 1) Assumes you have a UniFi Controller installed and running on your system.
@@ -16,18 +16,22 @@
 
 # KEYSTORE BACKUP
 # Even though this script attempts to be clever and careful in how it backs up your existing keystore,
-# it's never a bad idea to manually back up your keystore (located at $UNIFI_DIR/data/keystore)
-# to a separate directory before running this script. If anything goes wrong, you can restore from your
-# backup, restart the UniFi Controller service, and be back online immediately.
+# it's never a bad idea to manually back up your keystore (located at $UNIFI_DIR/data/keystore on RedHat
+# systems or /$UNIFI_DIR/keystore on Debian/Ubunty systems) to a separate directory before running this
+# script. If anything goes wrong, you can restore from your backup, restart the UniFi Controller service,
+# and be back online immediately.
 
 # CONFIGURATION OPTIONS
 UNIFI_HOSTNAME=hostname.example.com
-# Uncomment following two lines for Fedora/RedHat/CentOS
+# Uncomment following three lines for Fedora/RedHat/CentOS
 UNIFI_DIR=/opt/UniFi
 UNIFI_SERVICE=UniFi
+KEYSTORE=${UNIFI_DIR}/data/keystore
+
 # Uncomment following two lines for Debian/Ubuntu
 #UNIFI_DIR=/var/lib/unifi
 #UNIFI_SERVICE=unifi
+#KEYSTORE=${UNIFI_DIR}/keystore
 
 # FOR LET'S ENCRYPT SSL CERTIFICATES ONLY
 # Generate your Let's Encrtypt key & cert with certbot before running this script
@@ -40,7 +44,6 @@ SIGNED_CRT=/etc/ssl/certs/hostname.example.com.crt
 CHAIN_FILE=/etc/ssl/certs/startssl-chain.crt
 
 # CONFIGURATION OPTIONS YOU PROBABLY SHOULDN'T CHANGE
-KEYSTORE=${UNIFI_DIR}/data/keystore
 ALIAS=unifi
 PASSWORD=aircontrolenterprise
 
