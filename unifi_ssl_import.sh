@@ -5,14 +5,14 @@
 # by Steve Jenkins <http://www.stevejenkins.com/>
 # Part of https://github.com/stevejenkins/ubnt-linux-utils/
 # Incorporates ideas from https://source.sosdg.org/brielle/lets-encrypt-scripts
-# Version 2.5
+# Version 2.6
 # Last Updated Jan 7, 2017
 
 # REQUIREMENTS
 # 1) Assumes you have a UniFi Controller installed and running on your system.
-# 2) Assumes you already have a valid private key, signed certificate, and certificate
-#    authority chain file. See http://wp.me/p1iGgP-2wU for detailed instructions
-#    on how to generate these files and use them with this script.
+# 2) Assumes you already have a valid 2048-bit private key, signed certificate, and certificate authority
+#    chain file. The Controller UI will not work with a 4096-bit certificate. See http://wp.me/p1iGgP-2wU
+#    for detailed instructions on how to generate those files and use them with this script.
 
 # KEYSTORE BACKUP
 # Even though this script attempts to be clever and careful in how it backs up your existing keystore,
