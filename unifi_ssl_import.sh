@@ -5,8 +5,8 @@
 # by Steve Jenkins <http://www.stevejenkins.com/>
 # Part of https://github.com/stevejenkins/ubnt-linux-utils/
 # Incorporates ideas from https://source.sosdg.org/brielle/lets-encrypt-scripts
-# Version 2.6
-# Last Updated Jan 7, 2017
+# Version 2.7
+# Last Updated Jan 8, 2017
 
 # REQUIREMENTS
 # 1) Assumes you have a UniFi Controller installed and running on your system.
@@ -23,14 +23,14 @@
 
 # CONFIGURATION OPTIONS
 UNIFI_HOSTNAME=hostname.example.com
+UNIFI_SERVICE=unifi
+
 # Uncomment following three lines for Fedora/RedHat/CentOS
 UNIFI_DIR=/opt/UniFi
-UNIFI_SERVICE=UniFi
 KEYSTORE=${UNIFI_DIR}/data/keystore
 
 # Uncomment following two lines for Debian/Ubuntu
 #UNIFI_DIR=/var/lib/unifi
-#UNIFI_SERVICE=unifi
 #KEYSTORE=${UNIFI_DIR}/keystore
 
 # FOR LET'S ENCRYPT SSL CERTIFICATES ONLY
