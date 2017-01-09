@@ -1,12 +1,12 @@
 # UniFi Controller systemd Service File
 # by Steve Jenkins
-# Last updated July 15, 2016
+# Last updated January 8, 2017
 
 # Instructions:
 # 1. Install Java, MongoDB, and UniFi Controller
-# 2. Save this file as /etc/systemd/system/UniFi.service
+# 2. Save this file as /etc/systemd/system/unifi.service
 # 3. Create 'ubnt' user on your system
-# 4. Run 'systemctl enable UniFi.service'
+# 4. Run 'systemctl enable unifi.service'
 
 [Unit]
 Description=Ubiquiti UniFi Controller
