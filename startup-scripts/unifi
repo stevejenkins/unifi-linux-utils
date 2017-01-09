@@ -1,12 +1,12 @@
 #!/bin/bash
 #
-# UniFi         Start and stop the UBNT UniFi Controller
+# unifi         Start and stop the UBNT UniFi Controller
 # chkconfig:    2345 95 20
 # description:  UniFi Controller
 # pidfile: /var/run/UniFi.pid
 
 # Script by Steve Jenkins (SteveJenkins.com)
-# Last Updated June 15, 2016
+# Last Updated January 8, 2017
 
 . /etc/rc.d/init.d/functions
 
@@ -14,7 +14,7 @@ SERVICE_NAME="UniFi Controller"
 PATH_TO_JAVA=/usr/bin/java
 PATH_TO_JAR=/opt/UniFi/lib/ace.jar
 MEM_LIMIT=1024M
-PID_FILE=/var/run/UniFi.pid
+PID_FILE=/var/run/unifi.pid
 
 start() {
   if [ ! -f $PID_FILE ]; then
@@ -66,7 +66,7 @@ case $1 in
   ;;
 *)
 
-echo "usage: service UniFi {start|stop|restart|status}"
+echo "usage: service unifi {start|stop|restart|status}"
 exit 1
 ;;
 
