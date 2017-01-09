@@ -3,8 +3,8 @@
 # upgrade_unifi_controller.sh
 # Easy UniFi Controller Upgrade Script for Unix/Linux Systems
 # by Steve Jenkins (stevejenkins.com)
-# Version 2.2
-# Last Updated Nov 27, 2016
+# Version 2.3
+# Last Updated January 8, 2017
 
 # REQUIREMENTS
 # 1) Assumes you already have any version of UniFi Controller installed 
@@ -26,7 +26,7 @@
 UNIFI_DOWNLOAD_URL=http://dl.ubnt.com/unifi/5.0.7/UniFi.unix.zip
 UNIFI_ARCHIVE_FILENAME=UniFi.unix.zip
 UNIFI_OWNER=ubnt
-UNIFI_SERVICE=UniFi
+UNIFI_SERVICE=unifi
 UNIFI_PARENT_DIR=/opt
 UNIFI_DIR=/opt/UniFi
 UNIFI_BACKUP_DIR=/opt/UniFi_bak
