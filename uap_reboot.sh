@@ -1,17 +1,17 @@
 #!/bin/sh
 
 # A simple script for remotely rebooting a Ubiquiti UniFi access point
-# Version 2.0 (Jan 10, 2017)
+# Version 2.1 (Jan 10, 2017)
 # by Steve Jenkins (http://www.stevejenkins.com/)
 
 # Requires sshpass (https://sourceforge.net/projects/sshpass/) which
 # is probably available via dnf, yum, or apt on your *nix distro.
 
 # USAGE
-# Update the user-configurable settings below, then run ./uap-reboot.sh from
+# Update the user-configurable settings below, then run ./uap_reboot.sh from
 # the command line. To reboot on a schedule, create a cronjob such as:
-# 45 3 * * * /usr/local/bin/uap-reboot.sh > /dev/null 2>&1 #Reboot UniFi AP
-# The above example will reboot the UniFi access point every morning at 3:45 AM.
+# 45 3 * * * /usr/local/bin/uap_reboot.sh > /dev/null 2>&1 #Reboot UniFi APs
+# The above example will reboot the UniFi access point(s) every morning at 3:45 AM.
 
 # USER-CONFIGURABLE SETTINGS
 username=ubnt
