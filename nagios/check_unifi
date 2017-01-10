@@ -1,0 +1,131 @@
+#!/usr/bin/python
+#
+# check_unifi - Nagios plugin to check Unifi Controller
+#
+# Based on UniFi WiFi Nagios Monitoring Plugin by Michel Greijmans
+# Rewritten 2016/08/26 by Michael Sweetser (mike@sweetser.info)
+#
+# Requires unifi pip module
+
+import argparse
+import sys
+from unifi.controller import Controller
+
+"""Nagios plugin to check the UniFi Controller for AP status."""
+
+__title__ = "check_unifi"
+__version__ = "1.0.0"
+
+# Standard Nagios return codes
+OK = 0
+WARNING = 1
+CRITICAL = 2
+UNKNOWN = 3
+nagiosprefixes = {
+    OK: "OK",
+    WARNING: "WARNING",
+    CRITICAL: "CRITICAL",
+    UNKNOWN: "UNKNOWN"
+}
+
+
+# Get the arguments
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    '-H', '--hostname', default='unifi',
+    help='the controller address (default "unifi")')
+parser.add_argument(
+    '-u', '--username', default='admin',
+    help='the controller username (default("admin")')
+parser.add_argument(
+    '-p', '--password', default='',
+    help='the controller password')
+parser.add_argument(
+    '-b', '--port', default='8443',
+    help='the controller port (default "8443")')
+parser.add_argument(
+    '-v', '--version', default='v2',
+    help='the controller base version (default "v2")')
+parser.add_argument(
+    '-s', '--siteid', default='default',
+    help='the site ID, UniFi >=3.x only (default "default")')
+parser.add_argument(
+    '-w', '--warning', default='',
+    help='amount of APs to be down for WARNING (default: none)')
+parser.add_argument(
+    '-c', '--critical', default='',
+    help='amount of APs to be down for CRITICAL (default: none)')
+parser.add_argument(
+    '-a', '--ap', default='',
+    help='name of AP to get status of (default: overall check)')
+args = parser.parse_args()
+
+# Connect to the AP (if we can)
+try:
+    c = Controller(args.hostname, args.username, args.password,
+                   args.port, args.version, args.siteid)
+except Exception as e:
+    print ("UNKNOWN: Error connecting to UniFi Controller (%s)|"
+           "Online=0 Offline=0" % e)
+    sys.exit(UNKNOWN)
+
+aps = c.get_aps()
+
+ap_online = 0
+ap_offline = 0
+offline_names = []
+offline_list = ""
+ap_code = OK
+ap_state = 0
+ap_message = ""
+
+# Loop through the discovered APs
+for ap in aps:
+    if ap['state'] == 1:
+        ap_online += 1
+    else:
+        ap_offline += 1
+        offline_names.append(ap['name'])
+
+    # If a specific AP was specified, record its specific status
+    if ap['name'] == args.ap:
+        ap_state = ap['state']
+        if ap['state'] == 1:
+            ap_code = OK
+            ap_message = "AP %s Online" % args.ap
+        else:
+            ap_code = CRITICAL
+            ap_message = "AP %s Offline" % args.ap
+
+if args.ap != "":
+    if ap_message == "":
+        ap_code = UNKNOWN
+        ap_message = "AP %s not found" % args.ap
+
+    print ("%s: %s | Online=%d"
+           % (nagiosprefixes[ap_code], ap_message, ap_state))
+    sys.exit(ap_code)
+else:
+    # Throw an UNKNOWN error if we couldn't find the specified AP.
+    if args.ap != "" and ap_message == "":
+        ap_code = UNKNOWN
+        ap_message = "AP %s not found" % args.ap
+
+    offline_names.sort()
+    if ap_offline > 0:
+        offline_list = " (%s)" % ",".join(offline_names)
+
+    message = ("Offline: %d%s Online: %d"
+               % (ap_offline, offline_list, ap_online))
+    message_code = OK
+
+    if args.critical != '':
+        if ap_offline >= args.critical:
+            message_code = CRITICAL
+    if message_code == OK and args.warning != '':
+        if ap_offline >= args.warning:
+            message_code = WARNING
+
+    print ("%s: %s | Online=%d Offline=%d"
+           % (nagiosprefixes[message_code], message, ap_online, ap_offline))
+    sys.exit(message_code)
