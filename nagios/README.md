@@ -43,5 +43,6 @@ This project is licensed under the terms of the MIT license.
 
 Credits
 -------
-Current version by Michael Sweetser (https://github.com/msweetser/check_unifi)
+Current version by Michael Sweetser, available at: https://github.com/msweetser/check_unifi
+
 Based on Michel Greijmans' original UniFi WiFi Nagios Monitoring Plugin, available at: https://community.ubnt.com/t5/UniFi-Wireless/UniFi-WiFi-Nagios-Monitoring-Plugin/td-p/1092503
