@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # A simple script for remotely rebooting a Ubiquiti UniFi access point
-# Version 1.0 (Dec 15, 2015)
+# Version 2.0 (Jan 10, 2017)
 # by Steve Jenkins (http://www.stevejenkins.com/)
 
 # Requires sshpass (https://sourceforge.net/projects/sshpass/) which
@@ -17,15 +17,17 @@
 username=ubnt
 password=ubnt
 known_hosts_file=/dev/null
-uap_ip=192.168.1.11
+uap_list=( "192.168.0.2" "192.168.0.3" )
 
 # SHOULDN'T NEED TO CHANGE ANYTHING PAST HERE
-echo "Rebooting UniFi access point at $uap_ip..."
+for i in "${uap_list[@]}"
+do
 
-if sshpass -p $password ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=$known_hosts_file $username@$uap_ip reboot; then
-        echo "Reboot complete!" 1>&2
-        exit 0
-else
-        echo "Could not reboot UniFi access point. Please check your settings." 1>&2
-        exit 1
-fi
+	echo "Rebooting UniFi access point at $i..."
+	if sshpass -p $password ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=$known_hosts_file $username@$i reboot; then
+                echo "Access point at $i rebooted!" 1>&2
+	else
+                echo "Could not reboot access point at $i." 1>&2
+	fi
+done
+exit 0
