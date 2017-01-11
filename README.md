@@ -10,6 +10,10 @@ Imports SSL certificates (including Let's Encrypt) for the Ubiquiti (UBNT) UniFi
 ### upgrade_unifi_controller.sh
 Automates upgrade of Ubiquiti (UBNT) UniFi Controller software on Linux / Unix Systems.
 
+### UniFi Nagios Monitoring Scripts
+#### /nagios/check_unifi
+A Python-based script that checks the status of UAPs and reports WARNING or CRITICAL output for Nagios/Icinga monitoring servers. Original version at https://github.com/msweetser/check_unifi.
+
 ### UniFi Controller Startup Scripts
 #### /startup-scripts/UniFi.service
 A systemd service file which can be used to run a Ubiquiti (UBNT) UniFi controller Ubiquiti on Linux systems.
