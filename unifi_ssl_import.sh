@@ -5,8 +5,8 @@
 # by Steve Jenkins <http://www.stevejenkins.com/>
 # Part of https://github.com/stevejenkins/ubnt-linux-utils/
 # Incorporates ideas from https://source.sosdg.org/brielle/lets-encrypt-scripts
-# Version 2.7
-# Last Updated Jan 8, 2017
+# Version 2.8
+# Last Updated Jan 13, 2017
 
 # REQUIREMENTS
 # 1) Assumes you have a UniFi Controller installed and running on your system.
@@ -27,10 +27,12 @@ UNIFI_SERVICE=unifi
 
 # Uncomment following three lines for Fedora/RedHat/CentOS
 UNIFI_DIR=/opt/UniFi
+JAVA_DIR=${UNIFI_DIR}
 KEYSTORE=${UNIFI_DIR}/data/keystore
 
-# Uncomment following two lines for Debian/Ubuntu
+# Uncomment following three lines for Debian/Ubuntu
 #UNIFI_DIR=/var/lib/unifi
+#JAVA_DIR=/usr/lib/unifi
 #KEYSTORE=${UNIFI_DIR}/keystore
 
 # FOR LET'S ENCRYPT SSL CERTIFICATES ONLY
@@ -169,13 +171,13 @@ keytool -importkeystore \
 printf "\nImporting certificate authority into UniFi keystore...\n\n"
 if [ ${LE_MODE} == "true" ]; then
 	# Import with additional cross-signed CA file
-	java -jar ${UNIFI_DIR}/lib/ace.jar import_cert \
+	java -jar ${JAVA_DIR}/lib/ace.jar import_cert \
 	${SIGNED_CRT} \
 	${CHAIN_FILE} \
 	${CA_TEMP}
 else
 	# Import in standard mode
-	java -jar ${UNIFI_DIR}/lib/ace.jar import_cert \
+	java -jar ${JAVA_DIR}/lib/ace.jar import_cert \
 	${SIGNED_CRT} \
 	${CHAIN_FILE}
 fi	
