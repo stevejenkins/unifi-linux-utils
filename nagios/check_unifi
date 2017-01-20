@@ -88,7 +88,7 @@ for ap in aps:
         offline_names.append(ap['name'])
 
     # If a specific AP was specified, record its specific status
-    if ap['name'] == args.ap:
+    if hasattr(ap, 'name') and ap['name'] == args.ap:
         ap_state = ap['state']
         if ap['state'] == 1:
             ap_code = OK
