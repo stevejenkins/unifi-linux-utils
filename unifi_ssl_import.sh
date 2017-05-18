@@ -77,18 +77,18 @@ if [ ${LE_MODE} == "true" ]; then
 	# MD5 is different, so it's time to get busy!
 	printf "\nUpdated SSL certificate available. Proceeding with import...\n"
 	fi
-fi
-
-# Verify required files exist
-if [ ! -f ${PRIV_KEY} ] || [ ! -f ${SIGNED_CRT} ] || [ ! -f ${CHAIN_FILE} ]; then
-	printf "\nMissing one or more required files. Check your settings.\n"
-	exit 1
 else
-	# Everything looks OK to proceed
-	printf "\nImporting the following files:\n"
-	printf "Private Key: %s\n" "$PRIV_KEY"
-	printf "Signed Certificate: %s\n" "$SIGNED_CRT"
-	printf "CA File: %s\n" "$CHAIN_FILE"
+  # Verify required files exist
+  if [ ! -f ${PRIV_KEY} ] || [ ! -f ${SIGNED_CRT} ] || [ ! -f ${CHAIN_FILE} ]; then
+  	printf "\nMissing one or more required files. Check your settings.\n"
+  	exit 1
+  else
+  	# Everything looks OK to proceed
+  	printf "\nImporting the following files:\n"
+  	printf "Private Key: %s\n" "$PRIV_KEY"
+  	printf "Signed Certificate: %s\n" "$SIGNED_CRT"
+  	printf "CA File: %s\n" "$CHAIN_FILE"
+  fi
 fi
 
 # Create temp files
@@ -100,12 +100,12 @@ printf "\nStopping UniFi Controller...\n"
 service ${UNIFI_SERVICE} stop
 
 if [ ${LE_MODE} == "true" ]; then
-	
-	# Write a new MD5 checksum based on the updated certificate	
+
+	# Write a new MD5 checksum based on the updated certificate
 	printf "\nUpdating certificate MD5 checksum...\n"
 
-	md5sum ${LE_LIVE_DIR}/${UNIFI_HOSTNAME}/cert.pem > ${LE_LIVE_DIR}/${UNIFI_HOSTNAME}/cert.pem.md5 
-	
+	md5sum ${LE_LIVE_DIR}/${UNIFI_HOSTNAME}/cert.pem > ${LE_LIVE_DIR}/${UNIFI_HOSTNAME}/cert.pem.md5
+
 	# Create local copy of cross-signed CA File (required for keystore import)
 	# Verify original @ https://www.identrust.com/certificates/trustid/root-download-x3.html
   cat > "${CA_TEMP}" <<'_EOF'
@@ -142,7 +142,7 @@ else
 	printf "\nNo original keystore backup found.\n"
 	printf "\nCreating backup as keystore.orig...\n"
 fi
-	 
+
 # Export your existing SSL key, cert, and CA data to a PKCS12 file
 printf "\nExporting SSL certificate and key data into temporary PKCS12 file...\n"
 
@@ -152,11 +152,11 @@ openssl pkcs12 -export \
 -CAfile ${CHAIN_FILE} \
 -out ${P12_TEMP} -passout pass:${PASSWORD} \
 -caname root -name ${ALIAS}
-	
+
 # Delete the previous certificate data from keystore to avoid "already exists" message
 printf "\nRemoving previous certificate data from UniFi keystore...\n"
 keytool -delete -alias ${ALIAS} -keystore ${KEYSTORE} -deststorepass ${PASSWORD}
-	
+
 # Import the temp PKCS12 file into the UniFi keystore
 printf "\nImporting SSL certificate into UniFi keystore...\n"
 keytool -importkeystore \
@@ -166,7 +166,7 @@ keytool -importkeystore \
 -deststorepass ${PASSWORD} \
 -destkeypass ${PASSWORD} \
 -alias ${ALIAS} -trustcacerts
-	
+
 # Import the certificate authority data into the UniFi keystore
 printf "\nImporting certificate authority into UniFi keystore...\n\n"
 if [ ${LE_MODE} == "true" ]; then
@@ -180,13 +180,13 @@ else
 	java -jar ${JAVA_DIR}/lib/ace.jar import_cert \
 	${SIGNED_CRT} \
 	${CHAIN_FILE}
-fi	
+fi
 
 # Clean up temp files
 printf "\nRemoving temporary files...\n"
 rm -f ${P12_TEMP}
 rm -f ${CA_TEMP}
-	
+
 # Restart the UniFi Controller to pick up the updated keystore
 printf "\nRestarting UniFi Controller to apply new Let's Encrypt SSL certificate...\n"
 service ${UNIFI_SERVICE} start
