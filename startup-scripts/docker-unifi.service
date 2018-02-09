@@ -1,19 +1,46 @@
 # UniFi Controller systemd Docker Service File
-# by Rogier Lommers
-# Last updated December 10, 2016
-
-# This service file assumes a Docker container is available. If not, create one with:
-# docker run --name unifi-controller --net host -v /srv/services/unify:/usr/lib/unifi/data -v /srv/services/unify:/usr/lib/unifi/logs -v /srv/services/unify:/var/log/supervisor goofball222/unifi
+# by Rogier Lommers, Michal Czeraszkiewicz
+# Last updated February 9, 2018
 
 [Unit]
-Description=Unifi controller
+Description=Unifi Controller Service
+
 Requires=docker.service
 After=docker.service
+After=network-online.target
 
 [Service]
+# Wait on start if image has to be pulled
+TimeoutStartSec=0
+
+# Always restart if container goes down for some reason
 Restart=always
-ExecStart=/usr/bin/docker start -a unifi-controller
-ExecStop=/usr/bin/docker stop -t 3 unifi-controller
+
+KillMode=none
+
+# Load default environment variables
+EnvironmentFile=/etc/environment
+# Define environment variables
+Environment=IMAGE_NAME=goofball222/unifi
+Environment=IMAGE_VERSION=latest
+Environment=CONTAINER_NAME=unifi-controller
+
+# Pull the Docker container
+ExecStartPre=/usr/bin/docker pull ${IMAGE_NAME}:${IMAGE_VERSION}
+# Make sure the container is not running
+ExecStartPre=-/usr/bin/docker stop ${CONTAINER_NAME}
+ExecStartPre=-/usr/bin/docker rm ${CONTAINER_NAME}
+
+# Start the Unifi Docker container
+ExecStart=/usr/bin/docker run --name ${CONTAINER_NAME} \
+                              --net host \
+                              --volume /srv/services/unify:/usr/lib/unifi/data \
+                              --volume /srv/services/unify:/usr/lib/unifi/logs \
+                              --volume /srv/services/unify:/var/log/supervisor \
+                              ${IMAGE_NAME}:${IMAGE_VERSION}
+
+# Stop the Unifi Docker container
+ExecStop=/usr/bin/docker stop -t 3 ${CONTAINER_NAME}
 
 [Install]
 WantedBy=default.target
