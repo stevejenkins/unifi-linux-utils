@@ -35,6 +35,11 @@ KEYSTORE=${UNIFI_DIR}/data/keystore
 #JAVA_DIR=/usr/lib/unifi
 #KEYSTORE=${UNIFI_DIR}/keystore
 
+# Uncomment following three lines for Unifi Cloud Key
+#UNIFI_DIR=/usr/lib/unifi
+#JAVA_DIR=${UNIFI_DIR}
+#KEYSTORE=${UNIFI_DIR}/data/keystore
+
 # FOR LET'S ENCRYPT SSL CERTIFICATES ONLY
 # Generate your Let's Encrtypt key & cert with certbot before running this script
 LE_MODE=no
