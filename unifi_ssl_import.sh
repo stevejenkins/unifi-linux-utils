@@ -26,14 +26,14 @@ UNIFI_HOSTNAME=hostname.example.com
 UNIFI_SERVICE=unifi
 
 # Uncomment following three lines for Fedora/RedHat/CentOS
-#UNIFI_DIR=/opt/UniFi
-#JAVA_DIR=${UNIFI_DIR}
-#KEYSTORE=${UNIFI_DIR}/data/keystore
+UNIFI_DIR=/opt/UniFi
+JAVA_DIR=${UNIFI_DIR}
+KEYSTORE=${UNIFI_DIR}/data/keystore
 
 # Uncomment following three lines for Debian/Ubuntu
-UNIFI_DIR=/var/lib/unifi
-JAVA_DIR=/usr/lib/unifi
-KEYSTORE=${UNIFI_DIR}/keystore
+#UNIFI_DIR=/var/lib/unifi
+#JAVA_DIR=/usr/lib/unifi
+#KEYSTORE=${UNIFI_DIR}/keystore
 
 # FOR LET'S ENCRYPT SSL CERTIFICATES ONLY
 # Generate your Let's Encrtypt key & cert with certbot before running this script
@@ -41,9 +41,9 @@ LE_MODE=no
 LE_LIVE_DIR=/etc/letsencrypt/live
 
 # THE FOLLOWING OPTIONS NOT REQUIRED IF LE_MODE IS ENABLED
-#PRIV_KEY=/etc/ssl/private/hostname.example.com.key
-#SIGNED_CRT=/etc/ssl/certs/hostname.example.com.crt
-#CHAIN_FILE=/etc/ssl/certs/startssl-chain.crt
+PRIV_KEY=/etc/ssl/private/hostname.example.com.key
+SIGNED_CRT=/etc/ssl/certs/hostname.example.com.crt
+CHAIN_FILE=/etc/ssl/certs/startssl-chain.crt
 
 # CONFIGURATION OPTIONS YOU PROBABLY SHOULDN'T CHANGE
 ALIAS=unifi
