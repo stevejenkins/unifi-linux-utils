@@ -64,8 +64,7 @@ if [[ ${LE_MODE} == "YES" || ${LE_MODE} == "yes" || ${LE_MODE} == "Y" || ${LE_MO
 	LE_MODE=true
 	printf "\nRunning in Let's Encrypt Mode...\n"
 	PRIV_KEY=${LE_LIVE_DIR}/${UNIFI_HOSTNAME}/privkey.pem
-	SIGNED_CRT=${LE_LIVE_DIR}/${UNIFI_HOSTNAME}/cert.pem
-	CHAIN_FILE=${LE_LIVE_DIR}/${UNIFI_HOSTNAME}/chain.pem
+	CHAIN_FILE=${LE_LIVE_DIR}/${UNIFI_HOSTNAME}/fullchain.pem
 else
 	LE_MODE=false
 	printf "\nRunning in Standard Mode...\n"
@@ -74,7 +73,7 @@ fi
 if [ ${LE_MODE} == "true" ]; then
 	# Check to see whether LE certificate has changed
 	printf "\nInspecting current SSL certificate...\n"
-	if md5sum -c ${LE_LIVE_DIR}/${UNIFI_HOSTNAME}/cert.pem.md5 &>/dev/null; then
+	if md5sum -c ${LE_LIVE_DIR}/${UNIFI_HOSTNAME}/privkey.pem.md5 &>/dev/null; then
 		# MD5 remains unchanged, exit the script
 		printf "\nCertificate is unchanged, no update is necessary.\n"
 		exit 0
@@ -85,20 +84,18 @@ if [ ${LE_MODE} == "true" ]; then
 fi
 
 # Verify required files exist
-if [ ! -f ${PRIV_KEY} ] || [ ! -f ${SIGNED_CRT} ] || [ ! -f ${CHAIN_FILE} ]; then
+if [ ! -f ${PRIV_KEY} ] || [ ! -f ${CHAIN_FILE} ]; then
 	printf "\nMissing one or more required files. Check your settings.\n"
 	exit 1
 else
 	# Everything looks OK to proceed
 	printf "\nImporting the following files:\n"
 	printf "Private Key: %s\n" "$PRIV_KEY"
-	printf "Signed Certificate: %s\n" "$SIGNED_CRT"
 	printf "CA File: %s\n" "$CHAIN_FILE"
 fi
 
 # Create temp files
 P12_TEMP=$(mktemp)
-CA_TEMP=$(mktemp)
 
 # Stop the UniFi Controller
 printf "\nStopping UniFi Controller...\n"
@@ -109,32 +106,8 @@ if [ ${LE_MODE} == "true" ]; then
 	# Write a new MD5 checksum based on the updated certificate	
 	printf "\nUpdating certificate MD5 checksum...\n"
 
-	md5sum ${LE_LIVE_DIR}/${UNIFI_HOSTNAME}/cert.pem > ${LE_LIVE_DIR}/${UNIFI_HOSTNAME}/cert.pem.md5 
+	md5sum ${PRIV_KEY} > ${LE_LIVE_DIR}/${UNIFI_HOSTNAME}/privkey.pem.md5 
 	
-	# Create local copy of cross-signed CA File (required for keystore import)
-	# Verify original @ https://www.identrust.com/certificates/trustid/root-download-x3.html
-  cat > "${CA_TEMP}" <<'_EOF'
------BEGIN CERTIFICATE-----
-MIIDSjCCAjKgAwIBAgIQRK+wgNajJ7qJMDmGLvhAazANBgkqhkiG9w0BAQUFADA/
-MSQwIgYDVQQKExtEaWdpdGFsIFNpZ25hdHVyZSBUcnVzdCBDby4xFzAVBgNVBAMT
-DkRTVCBSb290IENBIFgzMB4XDTAwMDkzMDIxMTIxOVoXDTIxMDkzMDE0MDExNVow
-PzEkMCIGA1UEChMbRGlnaXRhbCBTaWduYXR1cmUgVHJ1c3QgQ28uMRcwFQYDVQQD
-Ew5EU1QgUm9vdCBDQSBYMzCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
-AN+v6ZdQCINXtMxiZfaQguzH0yxrMMpb7NnDfcdAwRgUi+DoM3ZJKuM/IUmTrE4O
-rz5Iy2Xu/NMhD2XSKtkyj4zl93ewEnu1lcCJo6m67XMuegwGMoOifooUMM0RoOEq
-OLl5CjH9UL2AZd+3UWODyOKIYepLYYHsUmu5ouJLGiifSKOeDNoJjj4XLh7dIN9b
-xiqKqy69cK3FCxolkHRyxXtqqzTWMIn/5WgTe1QLyNau7Fqckh49ZLOMxt+/yUFw
-7BZy1SbsOFU5Q9D8/RhcQPGX69Wam40dutolucbY38EVAjqr2m7xPi71XAicPNaD
-aeQQmxkqtilX4+U9m5/wAl0CAwEAAaNCMEAwDwYDVR0TAQH/BAUwAwEB/zAOBgNV
-HQ8BAf8EBAMCAQYwHQYDVR0OBBYEFMSnsaR7LHH62+FLkHX/xBVghYkQMA0GCSqG
-SIb3DQEBBQUAA4IBAQCjGiybFwBcqR7uKGY3Or+Dxz9LwwmglSBd49lZRNI+DT69
-ikugdB/OEIKcdBodfpga3csTS7MgROSR6cz8faXbauX+5v3gTt23ADq1cEmv8uXr
-AvHRAosZy5Q6XkjEGB5YGV8eAlrwDPGxrancWYaLbumR9YbK+rlmM6pZW87ipxZz
-R8srzJmwN0jP41ZL9c8PDHIyh8bwRLtTcm1D9SZImlJnt1ir/md2cXjbDaJWFBM5
-JDGFoqgCWjBH4d1QB7wCCZAA62RjYJsWvIjJEubSfZGL+T0yjWW06XyxV3bqxbYo
-Ob8VZRzI9neWagqNdwvYkQsEjgfbKbYK7p2CNTUQ
------END CERTIFICATE-----
-_EOF
 fi
 
 # Create double-safe keystore backup
@@ -152,11 +125,10 @@ fi
 printf "\nExporting SSL certificate and key data into temporary PKCS12 file...\n"
 
 openssl pkcs12 -export \
--in ${SIGNED_CRT} \
+-in ${CHAIN_FILE} \
 -inkey ${PRIV_KEY} \
--CAfile ${CHAIN_FILE} \
 -out ${P12_TEMP} -passout pass:${PASSWORD} \
--caname root -name ${ALIAS}
+-name ${ALIAS}
 	
 # Delete the previous certificate data from keystore to avoid "already exists" message
 printf "\nRemoving previous certificate data from UniFi keystore...\n"
@@ -171,26 +143,10 @@ keytool -importkeystore \
 -deststorepass ${PASSWORD} \
 -destkeypass ${PASSWORD} \
 -alias ${ALIAS} -trustcacerts
-	
-# Import the certificate authority data into the UniFi keystore
-printf "\nImporting certificate authority into UniFi keystore...\n\n"
-if [ ${LE_MODE} == "true" ]; then
-	# Import with additional cross-signed CA file
-	java -jar ${JAVA_DIR}/lib/ace.jar import_cert \
-	${SIGNED_CRT} \
-	${CHAIN_FILE} \
-	${CA_TEMP}
-else
-	# Import in standard mode
-	java -jar ${JAVA_DIR}/lib/ace.jar import_cert \
-	${SIGNED_CRT} \
-	${CHAIN_FILE}
-fi	
 
 # Clean up temp files
 printf "\nRemoving temporary files...\n"
 rm -f ${P12_TEMP}
-rm -f ${CA_TEMP}
 	
 # Restart the UniFi Controller to pick up the updated keystore
 printf "\nRestarting UniFi Controller to apply new Let's Encrypt SSL certificate...\n"
