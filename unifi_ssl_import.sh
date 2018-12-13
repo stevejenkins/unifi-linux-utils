@@ -124,11 +124,21 @@ fi
 # Export your existing SSL key, cert, and CA data to a PKCS12 file
 printf "\nExporting SSL certificate and key data into temporary PKCS12 file...\n"
 
-openssl pkcs12 -export \
--in ${CHAIN_FILE} \
--inkey ${PRIV_KEY} \
--out ${P12_TEMP} -passout pass:${PASSWORD} \
--name ${ALIAS}
+#If there is a signed crt we should include this in the export
+if [ -f ${SIGNED_CRT} ]; then
+    openssl pkcs12 -export \
+    -in ${CHAIN_FILE} \
+    -in ${SIGNED_CRT} \
+    -inkey ${PRIV_KEY} \
+    -out ${P12_TEMP} -passout pass:${PASSWORD} \
+    -name ${ALIAS}
+else
+    openssl pkcs12 -export \
+    -in ${CHAIN_FILE} \
+    -inkey ${PRIV_KEY} \
+    -out ${P12_TEMP} -passout pass:${PASSWORD} \
+    -name ${ALIAS}
+fi
 	
 # Delete the previous certificate data from keystore to avoid "already exists" message
 printf "\nRemoving previous certificate data from UniFi keystore...\n"
@@ -142,6 +152,7 @@ keytool -importkeystore \
 -destkeystore ${KEYSTORE} \
 -deststorepass ${PASSWORD} \
 -destkeypass ${PASSWORD} \
+-deststoretype pkcs12 \
 -alias ${ALIAS} -trustcacerts
 
 # Clean up temp files
