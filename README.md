@@ -10,7 +10,7 @@ Imports SSL certificates (including Let's Encrypt) for the Ubiquiti (UBNT) UniFi
 ### upgrade_unifi_controller.sh
 Automates upgrade of Ubiquiti (UBNT) UniFi Controller software on Linux / Unix Systems.
 
-### upgrade_unifi_devices.sh
+### upgrade_unifi.sh
 Automates local LAN fimware upgrades of Ubiquiti (UBNT) UniFi devices (still in beta).
 
 ## UniFi Nagios Monitoring Scripts
