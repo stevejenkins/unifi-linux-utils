@@ -76,7 +76,8 @@ for i in "${U7PG2_ip_list[@]}"
 do
         echo "Upgrading UAP at $i..."
         if sshpass -p $password ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=$known_hosts_file $username"@$i"<<EOF
-                sudo upgrade $U7PG2_fw
+                sudo upgrade $U7PG2_fw &
+		exit
 EOF
 then
                 echo "Firmware upgrade for UAP $i initiated!" 1>&2
