@@ -2,7 +2,7 @@
 
 #################################################################################
 # A simple script for remotely upgrading Ubiquiti UniFi hardware firmware
-# Version 1.2 (Dec 20, 2018)
+# Version 1.2-beta1 (Dec 20, 2018)
 # by Steve Jenkins (http://www.stevejenkins.com/)
 #
 # Requires bash and sshpass (https://sourceforge.net/projects/sshpass/)
