@@ -1,0 +1,17 @@
+{
+  "_comment1": "Enables additional Debian repos on a USG to make installing packages (like nano) easier",
+  "_comment2": "After provisioning USG run 'sudo apt-get update' via CLI before attempting to install new packages",
+	"system": {
+		"package": {
+			"repository": {
+				"wheezy": {
+					"components": "main contrib non-free",
+					"distribution": "wheezy",
+					"password": "",
+					"url": "http://http.us.debian.org/debian",
+					"username": ""
+				}
+			}
+		}
+	}
+}
