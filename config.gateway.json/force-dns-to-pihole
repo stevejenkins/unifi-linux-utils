@@ -17,7 +17,7 @@
 						"address": "!192.168.0.105"
 					},
 					"log": "disable",
-					"protocol": "udp",
+					"protocol": "tcp_udp",
 					"type": "destination"
 				},
 				"6000": {
@@ -28,7 +28,7 @@
 					},
 					"log": "disable",
 					"outbound-interface": "eth0",
-					"protocol": "udp",
+					"protocol": "tcp_udp",
 					"type": "masquerade"
 				}
 			}
