@@ -1,0 +1,114 @@
+{
+	"_comment1": "Enables the Virtual Router Redundancy Protocol (VRRP) to use two USG routers on one network",
+	"_comment2": "Contributed by learningman. See https://bit.ly/2MoaFTa",
+	"interfaces": {
+		"ethernet": {
+			"eth0": {
+				"address": [
+					"10.x.x.253/24"
+				],
+				"duplex": "auto",
+				"firewall": {
+					"in": {
+						"modify": "LOAD_BALANCE",
+						"name": "LAN_IN"
+					},
+					"local": {
+						"name": "LAN_LOCAL"
+					},
+					"out": {
+						"name": "LAN_OUT"
+					}
+				},
+				"speed": "auto",
+				"vif": {
+					"66": {
+						"address": [
+							"10.y.y.253/24"
+						],
+						"firewall": {
+							"in": {
+								"modify": "LOAD_BALANCE",
+								"name": "LAN_IN"
+							},
+							"local": {
+								"name": "LAN_LOCAL"
+							},
+							"out": {
+								"name": "LAN_OUT"
+							}
+						},
+						"vrrp": {
+							"vrrp-group": {
+								"66": {
+									"advertise-interval": "1",
+									"authentication": {
+										"password": "PASSWORD",
+										"type": "ah"
+									},
+									"preempt": "true",
+									"priority": "100",
+									"sync-group": "Sync",
+									"virtual-address": [
+										"10.y.y.254/24"
+									]
+								}
+							}
+						}
+					},
+					"88": {
+						"address": [
+							"10.z.z.253/24"
+						],
+						"firewall": {
+							"in": {
+								"modify": "LOAD_BALANCE",
+								"name": "GUEST_IN"
+							},
+							"local": {
+								"name": "GUEST_LOCAL"
+							},
+							"out": {
+								"name": "GUEST_OUT"
+							}
+						},
+						"vrrp": {
+							"vrrp-group": {
+								"88": {
+									"advertise-interval": "1",
+									"authentication": {
+										"password": "PASSWORD",
+										"type": "ah"
+									},
+									"preempt": "true",
+									"priority": "100",
+									"sync-group": "Sync",
+									"virtual-address": [
+										"10.z.z.254/24"
+									]
+								}
+							}
+						}
+					}
+				},
+				"vrrp": {
+					"vrrp-group": {
+						"1": {
+							"advertise-interval": "1",
+							"authentication": {
+								"password": "PASSWORD",
+								"type": "ah"
+							},
+							"preempt": "true",
+							"priority": "100",
+							"sync-group": "Sync",
+							"virtual-address": [
+								"10.x.x.254/24"
+							]
+						}
+					}
+				}
+			}
+		}
+	}
+}
