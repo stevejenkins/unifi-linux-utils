@@ -1,6 +1,4 @@
 {
-	"_comment1": "Enables the Virtual Router Redundancy Protocol (VRRP) to use two USG routers on one network",
-	"_comment2": "Contributed by learningman. See https://bit.ly/2MoaFTa",
 	"interfaces": {
 		"ethernet": {
 			"eth1": {
