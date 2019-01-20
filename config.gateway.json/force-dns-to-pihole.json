@@ -1,6 +1,4 @@
 {
-	"_comment1": "Forwards all internal port 53 DNS traffic to a Pi-hole, preventing hard-coded DNS servers. ",
-	"_comment2": "Replace 'eth0' with your USG's LAN interface and '192.168.0.105' with your Pi-hole's IP address",
 	"service": {
 		"nat": {
 			"rule": {
