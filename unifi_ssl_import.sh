@@ -152,7 +152,6 @@ keytool -importkeystore \
 -destkeystore ${KEYSTORE} \
 -deststorepass ${PASSWORD} \
 -destkeypass ${PASSWORD} \
--deststoretype pkcs12 \
 -alias ${ALIAS} -trustcacerts
 
 # Clean up temp files
