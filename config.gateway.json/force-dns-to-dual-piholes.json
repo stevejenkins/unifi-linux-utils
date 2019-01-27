@@ -1,0 +1,36 @@
+{
+	"service": {
+		"nat": {
+			"rule": {
+				"1": {
+					"description": "Redirect DNS requests",
+					"destination": {
+						"port": "53"
+					},
+					"inbound-interface": "eth0",
+					"inside-address": {
+						"address": "192.168.0.105-192.168.0.106",
+						"port": "53"
+					},
+					"source": {
+						"address": "!192.168.0.105-192.168.0.106"
+					},
+					"log": "disable",
+					"protocol": "tcp_udp",
+					"type": "destination"
+				},
+				"6000": {
+					"description": "MASQ DNS requests to LAN",
+					"destination": {
+						"address": "192.168.0.105-192.168.0.106",
+						"port": "53"
+					},
+					"log": "disable",
+					"outbound-interface": "eth0",
+					"protocol": "tcp_udp",
+					"type": "masquerade"
+				}
+			}
+		}
+	}
+}
