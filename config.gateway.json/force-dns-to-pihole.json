@@ -25,7 +25,7 @@
 					"destination": {
 						"port": "53"
 					},
-					"inbound-interface": "eth0",
+					"inbound-interface": "eth1",
 					"inside-address": {
 						"address": "192.168.0.105",
 						"port": "53"
@@ -44,7 +44,7 @@
 						"port": "53"
 					},
 					"log": "disable",
-					"outbound-interface": "eth0",
+					"outbound-interface": "eth1",
 					"protocol": "tcp_udp",
 					"type": "masquerade"
 				}
