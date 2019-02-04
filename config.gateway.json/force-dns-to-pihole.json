@@ -1,23 +1,5 @@
 {
 	"service": {
-		"dns": {
-			"forwarding": {
-				"cache-size": "1000",
-				"name-server": [
-					"192.168.0.105"
-				],
-				"except-interface": [
-					"eth0"
-				],
-				"options": [
-					"add-mac=text",
-					"expand-hosts",
-					"bogus-priv",
-					"localise-queries",
-					"strict-order"
-				]
-			}
-		},
 		"nat": {
 			"rule": {
 				"1": {
