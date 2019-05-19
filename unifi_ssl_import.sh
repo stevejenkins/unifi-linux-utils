@@ -70,10 +70,10 @@ else
 	printf "\nRunning in Standard Mode...\n"
 fi
 
-if [ ${LE_MODE} == "true" ]; then
+if [[ ${LE_MODE} == "true" ]]; then
 	# Check to see whether LE certificate has changed
 	printf "\nInspecting current SSL certificate...\n"
-	if md5sum -c ${LE_LIVE_DIR}/${UNIFI_HOSTNAME}/privkey.pem.md5 &>/dev/null; then
+	if md5sum -c "${LE_LIVE_DIR}/${UNIFI_HOSTNAME}/privkey.pem.md5" &>/dev/null; then
 		# MD5 remains unchanged, exit the script
 		printf "\nCertificate is unchanged, no update is necessary.\n"
 		exit 0
@@ -84,7 +84,7 @@ if [ ${LE_MODE} == "true" ]; then
 fi
 
 # Verify required files exist
-if [ ! -f "${PRIV_KEY}" ] || [ ! -f "${CHAIN_FILE}" ]; then
+if [[ ! -f ${PRIV_KEY} ]] || [[ ! -f ${CHAIN_FILE} ]]; then
 	printf "\nMissing one or more required files. Check your settings.\n"
 	exit 1
 else
@@ -99,24 +99,24 @@ P12_TEMP=$(mktemp)
 
 # Stop the UniFi Controller
 printf "\nStopping UniFi Controller...\n"
-service ${UNIFI_SERVICE} stop
+service "${UNIFI_SERVICE}" stop
 
-if [ ${LE_MODE} == "true" ]; then
+if [[ ${LE_MODE} == "true" ]]; then
 	
 	# Write a new MD5 checksum based on the updated certificate	
 	printf "\nUpdating certificate MD5 checksum...\n"
 
-	md5sum ${PRIV_KEY} > ${LE_LIVE_DIR}/${UNIFI_HOSTNAME}/privkey.pem.md5 
+	md5sum "${PRIV_KEY}" > "${LE_LIVE_DIR}/${UNIFI_HOSTNAME}/privkey.pem.md5"
 	
 fi
 
 # Create double-safe keystore backup
-if [ -s "${KEYSTORE}.orig" ]; then
+if [[ -s "${KEYSTORE}.orig" ]]; then
 	printf "\nBackup of original keystore exists!\n"
 	printf "\nCreating non-destructive backup as keystore.bak...\n"
-	cp ${KEYSTORE} ${KEYSTORE}.bak
+	cp "${KEYSTORE}" "${KEYSTORE}.bak"
 else
-	cp ${KEYSTORE} ${KEYSTORE}.orig
+	cp "${KEYSTORE}" "${KEYSTORE}.orig"
 	printf "\nNo original keystore backup found.\n"
 	printf "\nCreating backup as keystore.orig...\n"
 fi
@@ -125,42 +125,42 @@ fi
 printf "\nExporting SSL certificate and key data into temporary PKCS12 file...\n"
 
 #If there is a signed crt we should include this in the export
-if [ -f "${SIGNED_CRT}" ]; then
+if [[ -f ${SIGNED_CRT} ]]; then
     openssl pkcs12 -export \
-    -in ${CHAIN_FILE} \
-    -in ${SIGNED_CRT} \
-    -inkey ${PRIV_KEY} \
-    -out ${P12_TEMP} -passout pass:${PASSWORD} \
-    -name ${ALIAS}
+    -in "${CHAIN_FILE}" \
+    -in "${SIGNED_CRT}" \
+    -inkey "${PRIV_KEY}" \
+    -out "${P12_TEMP}" -passout pass:"${PASSWORD}" \
+    -name "${ALIAS}"
 else
     openssl pkcs12 -export \
-    -in ${CHAIN_FILE} \
-    -inkey ${PRIV_KEY} \
-    -out ${P12_TEMP} -passout pass:${PASSWORD} \
-    -name ${ALIAS}
+    -in "${CHAIN_FILE}" \
+    -inkey "${PRIV_KEY}" \
+    -out "${P12_TEMP}" -passout pass:"${PASSWORD}" \
+    -name "${ALIAS}"
 fi
 	
 # Delete the previous certificate data from keystore to avoid "already exists" message
 printf "\nRemoving previous certificate data from UniFi keystore...\n"
-keytool -delete -alias ${ALIAS} -keystore ${KEYSTORE} -deststorepass ${PASSWORD}
+keytool -delete -alias "${ALIAS}" -keystore "${KEYSTORE}" -deststorepass "${PASSWORD}"
 	
 # Import the temp PKCS12 file into the UniFi keystore
 printf "\nImporting SSL certificate into UniFi keystore...\n"
 keytool -importkeystore \
--srckeystore ${P12_TEMP} -srcstoretype PKCS12 \
--srcstorepass ${PASSWORD} \
--destkeystore ${KEYSTORE} \
--deststorepass ${PASSWORD} \
--destkeypass ${PASSWORD} \
--alias ${ALIAS} -trustcacerts
+-srckeystore "${P12_TEMP}" -srcstoretype PKCS12 \
+-srcstorepass "${PASSWORD}" \
+-destkeystore "${KEYSTORE}" \
+-deststorepass "${PASSWORD}" \
+-destkeypass "${PASSWORD}" \
+-alias "${ALIAS}" -trustcacerts
 
 # Clean up temp files
 printf "\nRemoving temporary files...\n"
-rm -f ${P12_TEMP}
+rm -f "${P12_TEMP}"
 	
 # Restart the UniFi Controller to pick up the updated keystore
 printf "\nRestarting UniFi Controller to apply new Let's Encrypt SSL certificate...\n"
-service ${UNIFI_SERVICE} start
+service "${UNIFI_SERVICE}" start
 
 # That's all, folks!
 printf "\nDone!\n"
