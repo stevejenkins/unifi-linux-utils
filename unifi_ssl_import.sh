@@ -164,5 +164,4 @@ service "${UNIFI_SERVICE}" start
 
 # That's all, folks!
 printf "\nDone!\n"
-
 exit 0
