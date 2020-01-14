@@ -40,6 +40,11 @@ KEYSTORE=${UNIFI_DIR}/data/keystore
 #JAVA_DIR=/usr/lib/unifi
 #KEYSTORE=${JAVA_DIR}/data/keystore
 
+# Uncomment following three lines for Unifi Dream Machine CloudKey
+UNIFI_DIR=/mnt/data/unifi
+JAVA_DIR=/mnt/data/unifi
+KEYSTORE=${JAVA_DIR}/data/keystore
+
 # FOR LET'S ENCRYPT SSL CERTIFICATES ONLY
 # Generate your Let's Encrtypt key & cert with certbot before running this script
 LE_MODE=no
