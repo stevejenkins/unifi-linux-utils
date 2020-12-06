@@ -1,0 +1,19 @@
+# unifi_ssl_import.service
+#
+# Usage: copy to (e.g.) /etc/systemd/system/unifi_ssl_import.service
+#        systemctl enable unifi_ssl_import.service
+#        systemctl start unifi_ssl_import.service
+#        systemctl status unifi_ssl_import.service
+#
+[Unit]
+Description= UniFi Controller SSL Certificate Import
+Documentation= https://www.stevejenkins.com/blog/2016/06/use-existing-ssl-certificate-linux-unifi-controller/
+
+[Service]
+Type= simple
+User=
+
+ExecStart= /usr/local/bin/unifi_ssl_import.sh
+
+[Install]
+WantedBy= unifi.service

@@ -1,0 +1,20 @@
+# unifi_ssl_import.timer
+#
+# Usage: copy to (e.g.) /etc/systemd/system/unifi_ssl_import.timer
+#        systemctl enable unifi_ssl_import.timer
+#        systemctl start unifi_ssl_import.timer
+#        systemctl status unifi_ssl_import.timer
+#
+# Note: Update the OnCalendar entries to about five minutes past when
+#       Let's Encrypt's certbot runs 
+#       (c.f. /etc/systemd/system/snap.certbot.renew.timer)
+[Unit]
+Description=Timer import renewed certificates for UniFi controller
+
+[Timer]
+Unit=unifi_ssl_import.service
+OnCalendar=*-*-* 02:08
+OnCalendar=*-*-* 12:37
+
+[Install]
+WantedBy=timers.target
