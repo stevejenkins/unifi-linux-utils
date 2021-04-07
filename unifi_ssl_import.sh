@@ -159,7 +159,7 @@ printf "\nRemoving temporary files...\n"
 rm -f "${P12_TEMP}"
 	
 # Restart the UniFi Controller to pick up the updated keystore
-printf "\nRestarting UniFi Controller to apply new Let's Encrypt SSL certificate...\n"
+printf "\nRestarting UniFi Controller to apply new SSL certificate...\n"
 service "${UNIFI_SERVICE}" start
 
 # That's all, folks!
