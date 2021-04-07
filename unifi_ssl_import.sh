@@ -102,12 +102,12 @@ printf "\nStopping UniFi Controller...\n"
 service "${UNIFI_SERVICE}" stop
 
 if [[ ${LE_MODE} == "true" ]]; then
-	
-	# Write a new MD5 checksum based on the updated certificate	
+
+	# Write a new MD5 checksum based on the updated certificate
 	printf "\nUpdating certificate MD5 checksum...\n"
 
 	md5sum "${PRIV_KEY}" > "${LE_LIVE_DIR}/${UNIFI_HOSTNAME}/privkey.pem.md5"
-	
+
 fi
 
 # Create double-safe keystore backup
@@ -120,7 +120,7 @@ else
 	printf "\nNo original keystore backup found.\n"
 	printf "\nCreating backup as keystore.orig...\n"
 fi
-	 
+
 # Export your existing SSL key, cert, and CA data to a PKCS12 file
 printf "\nExporting SSL certificate and key data into temporary PKCS12 file...\n"
 
@@ -139,11 +139,11 @@ else
     -out "${P12_TEMP}" -passout pass:"${PASSWORD}" \
     -name "${ALIAS}"
 fi
-	
+
 # Delete the previous certificate data from keystore to avoid "already exists" message
 printf "\nRemoving previous certificate data from UniFi keystore...\n"
 keytool -delete -alias "${ALIAS}" -keystore "${KEYSTORE}" -deststorepass "${PASSWORD}"
-	
+
 # Import the temp PKCS12 file into the UniFi keystore
 printf "\nImporting SSL certificate into UniFi keystore...\n"
 keytool -importkeystore \
@@ -157,7 +157,7 @@ keytool -importkeystore \
 # Clean up temp files
 printf "\nRemoving temporary files...\n"
 rm -f "${P12_TEMP}"
-	
+
 # Restart the UniFi Controller to pick up the updated keystore
 printf "\nRestarting UniFi Controller to apply new SSL certificate...\n"
 service "${UNIFI_SERVICE}" start

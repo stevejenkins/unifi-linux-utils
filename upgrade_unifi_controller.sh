@@ -7,12 +7,12 @@
 # Last Updated January 8, 2017
 
 # REQUIREMENTS
-# 1) Assumes you already have any version of UniFi Controller installed 
+# 1) Assumes you already have any version of UniFi Controller installed
 #    and running on your system.
 # 2) Assumes a user named "ubnt" owns the /opt/UniFi directory.
-# 3) Requires a service start/stop script to properly shut down and 
+# 3) Requires a service start/stop script to properly shut down and
 #    restart the UniFi controller before and after upgrade. I've written
-#    compatible startup scrips for SysV and systemd systems at 
+#    compatible startup scrips for SysV and systemd systems at
 #    http://wp.me/p1iGgP-2wl
 # 4) Requires wget command to fetch the software from UBNT's download site.
 
@@ -61,42 +61,42 @@ if [ -f "$UNIFI_ARCHIVE_FILENAME" ]; then
 	# Stop the local UniFi Controller service
 	printf "\n"
 	service $UNIFI_SERVICE stop
-	
+
 	# Remove previous backup directory (if it exists)
 	if [ -d "$UNIFI_BACKUP_DIR" ]; then
 		printf "\nRemoving previous backup directory...\n"
 		rm -rf $UNIFI_BACKUP_DIR
 	fi
-	
+
 	# Move existing UniFi directory to backup location
 	printf "\nMoving existing UniFi Controller directory to backup location...\n"
 	mv $UNIFI_DIR $UNIFI_BACKUP_DIR
-	
+
 	# Extract new version
 	printf "\nExtracting downloaded software..."
 	unzip -qq $TEMP_DIR/$UNIFI_ARCHIVE_FILENAME -d $UNIFI_PARENT_DIR &
 	show_dots $!
-	
+
 	# Jump into the backup directory
 	cd $UNIFI_BACKUP_DIR || exit
-	
+
 	# Create an archive of the existing data directory
 	printf "\nBacking up existing UniFi Controller data..."
 	tar zcf $TEMP_DIR/unifi_data_bak.tar.gz data/ &
 	show_dots $!
-	
+
 	# Extract the data into the new directory
 	printf "\nExtracting UniFi Controller backup data to new directory..."
 	tar zxf $TEMP_DIR/unifi_data_bak.tar.gz -C $UNIFI_DIR &
 	show_dots $!
-	
+
 	# Enforce proper ownership of UniFi directory
 	chown -R $UNIFI_OWNER:$UNIFI_OWNER $UNIFI_DIR
-	
+
 	# Restart the local UniFi Controller service
 	printf "\n"
 	service $UNIFI_SERVICE start
-	
+
 	# All done!
 	printf "\nUpgrade of UniFi Controller complete!\n"
 

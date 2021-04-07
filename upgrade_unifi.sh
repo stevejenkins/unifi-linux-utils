@@ -11,7 +11,7 @@
 # USAGE
 # Update the user-configurable settings below, then run ./upgrade_unifi.sh from
 # the command line.
-# 
+#
 # Devices will be upgraded in the order their IP addresses appear in the their
 # *_ip_list array. Take that into consideration when adding IPs to each array.
 #################################################################################
