@@ -11,6 +11,14 @@ Usage:
         -e UAP_LIST="10.0.1.10 10.0.1.20 10.0.1.30" \
         unifi-linux-utils uap_reboot.sh
 
+  check_unifi:
+
+    docker run --rm -it \
+        unifi-linux-utils check_unifi \
+        -H 10.0.1.1 \
+        -u "username" \
+        -p "password"
+
 USAGE
 
 exit 1
