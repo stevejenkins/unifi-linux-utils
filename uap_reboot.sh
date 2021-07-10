@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #######################################################################
 # A simple script for remotely rebooting a Ubiquiti UniFi access point
@@ -9,27 +9,31 @@
 # which should be available via dnf, yum, or apt on your *nix distro.
 #
 # USAGE
-# Update the user-configurable settings below, then run ./uap_reboot.sh from
-# the command line. To reboot on a schedule, create a cronjob such as:
-# 45 3 * * * /usr/local/bin/unifi-linux-utils/uap_reboot.sh > /dev/null 2>&1 #Reboot UniFi APs
+# Override the user-configurable settings by providing environment variables,
+# then run ./uap_reboot.sh from the command line. To reboot on a schedule,
+# create a cronjob such as:
+# 45 3 * * * UAP_LIST="10.0.1.10 10.0.1.20" /usr/local/bin/unifi-linux-utils/uap_reboot.sh > /dev/null 2>&1 #Reboot UniFi APs
 # The above example will reboot the UniFi access point(s) every morning at 3:45 AM.
 #######################################################################
 
 # USER-CONFIGURABLE SETTINGS
-username=ubnt
-password=ubnt
+username="${UAP_USERNAME:-ubnt}"
+password="${UAP_PASSWORD:-ubnt}"
 known_hosts_file=/dev/null
-uap_list=( 192.168.0.2 192.168.0.3 192.168.0.4 192.168.0.5 )
+IFS=' '; read -ra uap_list <<< "${UAP_LIST?}"
 
 # SHOULDN'T NEED TO CHANGE ANYTHING PAST HERE
-for i in "${uap_list[@]}"
+EXIT=0
+for i in "${!uap_list[@]}"
 do
 
-	echo "Rebooting UniFi access point at $i..."
-	if sshpass -p $password ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile=$known_hosts_file $username"@$i" reboot; then
-                echo "Access point at $i rebooted!" 1>&2
+  uap_addr="${uap_list[$i]}"
+  echo "Rebooting UniFi access point at ${uap_addr}... ($((i + 1))/${#uap_list[@]})"
+	if sshpass -p "$password" ssh -oStrictHostKeyChecking=no -oUserKnownHostsFile="$known_hosts_file" "${username}@${uap_addr}" reboot; then
+                echo "Access point at $uap_addr rebooted!" 1>&2
 	else
-                echo "Could not reboot access point at $i." 1>&2
+                echo "Could not reboot access point at $uap_addr." 1>&2
+                EXIT=$((EXIT + 1))
 	fi
 done
-exit 0
+exit $EXIT
