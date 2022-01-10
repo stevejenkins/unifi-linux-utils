@@ -124,6 +124,14 @@ fi
 # Export your existing SSL key, cert, and CA data to a PKCS12 file
 printf "\nExporting SSL certificate and key data into temporary PKCS12 file...\n"
 
+# Check for OpenSSL 3.x
+OPENSSL_VERSION=$(openssl version -v | awk '{print $2}'| awk -F '.' '{print $1}')
+if [[ "${OPENSSL_VERSION}" -ge '3' ]]; then
+  OPENSSL_LEGACY_FLAG='-legacy'
+else
+  OPENSSL_LEGACY_FLAG=
+fi
+
 #If there is a signed crt we should include this in the export
 if [[ -f ${SIGNED_CRT} ]]; then
     openssl pkcs12 -export \
@@ -131,13 +139,15 @@ if [[ -f ${SIGNED_CRT} ]]; then
     -in "${SIGNED_CRT}" \
     -inkey "${PRIV_KEY}" \
     -out "${P12_TEMP}" -passout pass:"${PASSWORD}" \
-    -name "${ALIAS}"
+    -name "${ALIAS}" \
+    ${OPENSSL_LEGACY_FLAG}
 else
     openssl pkcs12 -export \
     -in "${CHAIN_FILE}" \
     -inkey "${PRIV_KEY}" \
     -out "${P12_TEMP}" -passout pass:"${PASSWORD}" \
-    -name "${ALIAS}"
+    -name "${ALIAS}" \
+    ${OPENSSL_LEGACY_FLAG}
 fi
 	
 # Delete the previous certificate data from keystore to avoid "already exists" message
