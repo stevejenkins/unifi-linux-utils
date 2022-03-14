@@ -26,9 +26,9 @@ UNIFI_HOSTNAME=hostname.example.com
 UNIFI_SERVICE=unifi
 
 # Uncomment following three lines for Fedora/RedHat/CentOS
-#UNIFI_DIR=/opt/UniFi
-#JAVA_DIR=${UNIFI_DIR}
-#KEYSTORE=${UNIFI_DIR}/data/keystore
+UNIFI_DIR=/opt/UniFi
+JAVA_DIR=${UNIFI_DIR}
+KEYSTORE=${UNIFI_DIR}/data/keystore
 
 # Uncomment following three lines for Debian/Ubuntu
 #UNIFI_DIR=/var/lib/unifi
@@ -41,11 +41,11 @@ UNIFI_SERVICE=unifi
 #KEYSTORE=${JAVA_DIR}/data/keystore
 
 # Uncomment following four lines for Docker (MUST have jre installed and in path on host)
-DOCKER_MODE=yes
-DOCKER_CONTAINER=unifi-controller
-UNIFI_VOLUME=/mnt/storage/unifi
-UNIFI_DIR=${UNIFI_VOLUME}/config
-KEYSTORE=${UNIFI_DIR}/data/keystore
+#DOCKER_MODE=yes
+#DOCKER_CONTAINER=unifi-controller
+#UNIFI_VOLUME=/mnt/storage/unifi
+#UNIFI_DIR=${UNIFI_VOLUME}/config
+#KEYSTORE=${UNIFI_DIR}/data/keystore
 
 # FOR LET'S ENCRYPT SSL CERTIFICATES ONLY
 # Generate your Let's Encrtypt key & cert with certbot before running this script
