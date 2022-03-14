@@ -26,9 +26,9 @@ UNIFI_HOSTNAME=hostname.example.com
 UNIFI_SERVICE=unifi
 
 # Uncomment following three lines for Fedora/RedHat/CentOS
-UNIFI_DIR=/opt/UniFi
-JAVA_DIR=${UNIFI_DIR}
-KEYSTORE=${UNIFI_DIR}/data/keystore
+#UNIFI_DIR=/opt/UniFi
+#JAVA_DIR=${UNIFI_DIR}
+#KEYSTORE=${UNIFI_DIR}/data/keystore
 
 # Uncomment following three lines for Debian/Ubuntu
 #UNIFI_DIR=/var/lib/unifi
@@ -39,6 +39,13 @@ KEYSTORE=${UNIFI_DIR}/data/keystore
 #UNIFI_DIR=/var/lib/unifi
 #JAVA_DIR=/usr/lib/unifi
 #KEYSTORE=${JAVA_DIR}/data/keystore
+
+# Uncomment following four lines for Docker (MUST have jre installed and in path on host)
+DOCKER_MODE=yes
+DOCKER_CONTAINER=unifi-controller
+UNIFI_VOLUME=/mnt/storage/unifi
+UNIFI_DIR=${UNIFI_VOLUME}/config
+KEYSTORE=${UNIFI_DIR}/data/keystore
 
 # FOR LET'S ENCRYPT SSL CERTIFICATES ONLY
 # Generate your Let's Encrtypt key & cert with certbot before running this script
@@ -99,7 +106,11 @@ P12_TEMP=$(mktemp)
 
 # Stop the UniFi Controller
 printf "\nStopping UniFi Controller...\n"
-service "${UNIFI_SERVICE}" stop
+if [[ ${DOCKER_MODE} == "YES" || ${DOCKER_MODE} == "yes" || ${DOCKER_MODE} == "Y" || ${DOCKER_MODE} == "y" || ${DOCKER_MODE} == "TRUE" || ${DOCKER_MODE} == "true" || ${DOCKER_MODE} == "ENABLED" || ${DOCKER_MODE} == "enabled" || ${DOCKER_MODE} == 1 ]] ; then
+	docker stop "${DOCKER_CONTAINER}" 
+else
+	service "${UNIFI_SERVICE}" stop
+fi
 
 if [[ ${LE_MODE} == "true" ]]; then
 	
@@ -160,7 +171,11 @@ rm -f "${P12_TEMP}"
 	
 # Restart the UniFi Controller to pick up the updated keystore
 printf "\nRestarting UniFi Controller to apply new Let's Encrypt SSL certificate...\n"
-service "${UNIFI_SERVICE}" start
+if [[ ${DOCKER_MODE} == "YES" || ${DOCKER_MODE} == "yes" || ${DOCKER_MODE} == "Y" || ${DOCKER_MODE} == "y" || ${DOCKER_MODE} == "TRUE" || ${DOCKER_MODE} == "true" || ${DOCKER_MODE} == "ENABLED" || ${DOCKER_MODE} == "enabled" || ${DOCKER_MODE} == 1 ]] ; then
+	docker start "${DOCKER_CONTAINER}" 
+else
+	service "${UNIFI_SERVICE}" start
+fi
 
 # That's all, folks!
 printf "\nDone!\n"
