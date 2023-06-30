@@ -160,7 +160,12 @@ rm -f "${P12_TEMP}"
 	
 # Restart the UniFi Controller to pick up the updated keystore
 printf "\nRestarting UniFi Controller to apply new Let's Encrypt SSL certificate...\n"
-service "${UNIFI_SERVICE}" start
+service_cmd="$(command -v service 2> /dev/null)"
+if [ -n "${systemctl_cmd}" ]; then
+        service "${UNIFI_SERVICE}" start
+else
+        systemctl restart "${UNIFI_SERVICE}"
+fi
 
 # That's all, folks!
 printf "\nDone!\n"
